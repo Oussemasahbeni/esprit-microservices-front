@@ -24,7 +24,7 @@ import { ThemeService } from './core/config/theme.service';
 import { TranslateTitleStrategy } from './core/config/title-i18n-strategy';
 import { TranslocoHttpLoader } from './transloco-loader';
 
-import { Oidc } from '@core/auth/oidc.service';
+import { decodedIdTokenSchema, Oidc } from '@core/auth/oidc.service';
 import { provideHlmSidebarConfig } from '@spartan-ng/helm/sidebar';
 import { environment } from '../environments/environment';
 
@@ -101,6 +101,9 @@ export const appConfig: ApplicationConfig = {
         issuerUri: environment.issuerUri,
         clientId: environment.clientId,
         debugLogs: isDevMode(),
+        autoLogin: true,
+        providerAwaitsInitialization: false,
+        decodedIdTokenSchema,
       };
     }),
   ],
