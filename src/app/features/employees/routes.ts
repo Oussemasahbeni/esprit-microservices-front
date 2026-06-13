@@ -4,7 +4,7 @@ import { provideTranslocoScope } from '@jsverse/transloco';
 export default [
   {
     path: '',
-    providers: [provideTranslocoScope('users')],
-    loadComponent: () => import('./pages/users'),
+    providers: [provideTranslocoScope('employees')],
+    loadComponent: () => import('./pages/employees'),
   },
 ] as Routes;

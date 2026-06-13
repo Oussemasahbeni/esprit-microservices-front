@@ -1,0 +1,134 @@
+<hlm-dialog-header *transloco="let t; prefix: 'employees.form'">
+  <h3 hlmDialogTitle>{{ isEditMode() ? t('editTitle') : t('addTitle') }}</h3>
+  <p hlmDialogDescription>{{ isEditMode() ? t('editDescription') : t('addDescription') }}</p>
+</hlm-dialog-header>
+
+<div class="flex max-h-[calc(100vh-2rem)] w-full flex-col gap-0 overflow-y-auto sm:max-h-[min(640px,80vh)]">
+  <form *transloco="let t; prefix: 'employees.form'" class="flex w-full flex-col gap-4 p-2" [formRoot]="employeeForm">
+    <!-- First / Last name -->
+    <div class="flex flex-col gap-4 sm:flex-row">
+      <hlm-field class="flex-1">
+        <hlm-field-label>{{ t('label.firstName') }}</hlm-field-label>
+        <input hlmInput id="firstName" [formField]="employeeForm.firstName" />
+        @for (error of employeeForm.firstName().errors(); track error.kind) {
+          <hlm-field-error *transloco="let t">{{ t('validation.' + error.kind) }}</hlm-field-error>
+        }
+      </hlm-field>
+      <hlm-field class="flex-1">
+        <hlm-field-label>{{ t('label.lastName') }}</hlm-field-label>
+        <input hlmInput id="lastName" [formField]="employeeForm.lastName" />
+        @for (error of employeeForm.lastName().errors(); track error.kind) {
+          <hlm-field-error *transloco="let t">{{ t('validation.' + error.kind) }}</hlm-field-error>
+        }
+      </hlm-field>
+    </div>
+
+    <!-- Email -->
+    <hlm-field>
+      <hlm-field-label>{{ t('label.email') }}</hlm-field-label>
+      <input hlmInput id="email" type="email" [formField]="employeeForm.email" />
+      @for (error of employeeForm.email().errors(); track error.kind) {
+        <hlm-field-error *transloco="let t">{{ t('validation.' + error.kind) }}</hlm-field-error>
+      }
+    </hlm-field>
+
+    <!-- Phone -->
+    <hlm-field>
+      <hlm-field-label>{{ t('label.phone') }}</hlm-field-label>
+      <adm-phone-number-picker id="phone" [formField]="employeeForm.phone" />
+      @for (error of employeeForm.phone().errors(); track error.kind) {
+        <hlm-field-error *transloco="let t">{{ t('validation.' + error.kind) }}</hlm-field-error>
+      }
+    </hlm-field>
+
+    <!-- Role -->
+    <hlm-field>
+      <hlm-field-label>{{ t('label.role') }}</hlm-field-label>
+      <hlm-select class="text-start" [formField]="employeeForm.role">
+        <hlm-select-trigger id="role" class="w-full">
+          <hlm-select-placeholder>{{ t('selectRolePlaceholder') }}</hlm-select-placeholder>
+          <ng-template *transloco="let t; prefix: 'employees.role'" let-value hlmSelectValueTemplate>
+            {{ t(value) }}
+          </ng-template>
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (role of rolesList(); track role) {
+            <hlm-select-item *transloco="let t; prefix: 'employees.role'" [value]="role">{{ t(role) }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+      @for (error of employeeForm.role().errors(); track error.kind) {
+        <hlm-field-error *transloco="let t">{{ t('validation.' + error.kind) }}</hlm-field-error>
+      }
+    </hlm-field>
+
+    <!-- Restaurant ID (managers only, on creation) -->
+    @if (!employeeForm.restaurantId().hidden()) {
+      <hlm-field>
+        <hlm-field-label>{{ t('label.restaurantId') }}</hlm-field-label>
+        <input hlmInput id="restaurantId" type="number" [formField]="employeeForm.restaurantId" />
+        @for (error of employeeForm.restaurantId().errors(); track error.kind) {
+          <hlm-field-error *transloco="let t">{{ t('validation.' + error.kind) }}</hlm-field-error>
+        }
+      </hlm-field>
+    }
+
+    <!-- Position -->
+    <hlm-field>
+      <hlm-field-label>{{ t('label.position') }}</hlm-field-label>
+      <input hlmInput id="position" [formField]="employeeForm.position" />
+    </hlm-field>
+
+    <!-- Contract type -->
+    <hlm-field>
+      <hlm-field-label>{{ t('label.contractType') }}</hlm-field-label>
+      <hlm-select class="text-start" [formField]="employeeForm.contractType">
+        <hlm-select-trigger id="contractType" class="w-full">
+          <hlm-select-placeholder>{{ t('selectContractPlaceholder') }}</hlm-select-placeholder>
+          <ng-template *transloco="let t; prefix: 'employees.contractType'" let-value hlmSelectValueTemplate>
+            {{ t(value) }}
+          </ng-template>
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (contractType of contractTypesList(); track contractType) {
+            <hlm-select-item *transloco="let t; prefix: 'employees.contractType'" [value]="contractType">
+              {{ t(contractType) }}
+            </hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </hlm-field>
+
+    <!-- Status (edit only) -->
+    @if (!employeeForm.status().hidden()) {
+      <hlm-field>
+        <hlm-field-label>{{ t('label.status') }}</hlm-field-label>
+        <hlm-select class="text-start" [formField]="employeeForm.status">
+          <hlm-select-trigger id="status" class="w-full">
+            <hlm-select-placeholder>{{ t('selectStatusPlaceholder') }}</hlm-select-placeholder>
+            <ng-template *transloco="let t; prefix: 'employees.status'" let-value hlmSelectValueTemplate>
+              {{ t(value) }}
+            </ng-template>
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            @for (status of statusList(); track status) {
+              <hlm-select-item *transloco="let t; prefix: 'employees.status'" [value]="status">
+                {{ t(status) }}
+              </hlm-select-item>
+            }
+          </hlm-select-content>
+        </hlm-select>
+      </hlm-field>
+    }
+
+    <hlm-dialog-footer *transloco="let t; prefix: 'buttons'">
+      <button type="button" hlmBtn variant="outline" hlmDialogClose>{{ t('cancel') }}</button>
+      <button type="submit" hlmBtn [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+          <hlm-spinner />
+        }
+        {{ t('save') }}
+      </button>
+    </hlm-dialog-footer>
+  </form>
+</div>

@@ -1,0 +1,87 @@
+{
+    "cards": {
+        "total": {
+            "label": "Total des employés",
+            "value": "0",
+            "subtitle": "Ensemble du personnel enregistré",
+            "infoTooltip": "Nombre total d'employés dans le système."
+        },
+        "active": {
+            "label": "Actifs",
+            "value": "0",
+            "subtitle": "Comptes actuellement actifs"
+        },
+        "inactive": {
+            "label": "Inactifs",
+            "value": "0",
+            "subtitle": "Comptes désactivés"
+        },
+        "suspended": {
+            "label": "Suspendus",
+            "value": "0",
+            "subtitle": "Temporairement suspendus"
+        }
+    },
+    "list": {
+        "title": "Employés",
+        "columns": {
+            "name": "Nom",
+            "email": "E-mail",
+            "phone": "Téléphone",
+            "role": "Rôle",
+            "status": "Statut",
+            "position": "Poste",
+            "contractType": "Contrat",
+            "createdAt": "Date de création",
+            "actions": "Actions"
+        }
+    },
+    "form": {
+        "addTitle": "Ajouter un nouvel employé",
+        "editTitle": "Modifier l’employé",
+        "addDescription": "Renseignez les informations ci-dessous pour créer un nouvel employé.",
+        "editDescription": "Mettez à jour les informations ci-dessous pour modifier l’employé.",
+        "label": {
+            "firstName": "Prénom",
+            "lastName": "Nom",
+            "email": "E-mail",
+            "phone": "Téléphone",
+            "role": "Rôle",
+            "restaurantId": "ID du restaurant",
+            "position": "Poste",
+            "contractType": "Type de contrat",
+            "status": "Statut"
+        },
+        "selectRolePlaceholder": "Sélectionner un rôle",
+        "selectStatusPlaceholder": "Sélectionner un statut",
+        "selectContractPlaceholder": "Sélectionner un type de contrat",
+        "none": "Aucun"
+    },
+    "role": {
+        "MANAGER": "Responsable",
+        "ADMIN": "Administrateur",
+        "DELIVERY_MANAGER": "Responsable des livraisons"
+    },
+    "status": {
+        "ACTIVE": "Actif",
+        "INACTIVE": "Inactif",
+        "SUSPENDED": "Suspendu"
+    },
+    "contractType": {
+        "FULL_TIME": "Temps plein",
+        "PART_TIME": "Temps partiel",
+        "CONTRACT": "Contrat",
+        "INTERN": "Stagiaire"
+    },
+    "confirmationDialog": {
+        "deleteTitle": "Êtes-vous sûr de vouloir supprimer cet employé ?",
+        "deleteMessage": "Cette action est irréversible. Cela supprimera définitivement l'employé et toutes les données associées."
+    },
+    "toast": {
+        "employeeCreated": "Employé créé avec succès",
+        "employeeUpdated": "Employé mis à jour avec succès",
+        "employeeDeleted": "Employé supprimé avec succès",
+        "employeeEnabled": "Employé activé",
+        "employeeDisabled": "Employé désactivé"
+    }
+}

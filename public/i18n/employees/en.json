@@ -1,0 +1,87 @@
+{
+    "cards": {
+        "total": {
+            "label": "Total Employees",
+            "value": "0",
+            "subtitle": "All registered staff",
+            "infoTooltip": "Total number of employees in the system."
+        },
+        "active": {
+            "label": "Active",
+            "value": "0",
+            "subtitle": "Currently active accounts"
+        },
+        "inactive": {
+            "label": "Inactive",
+            "value": "0",
+            "subtitle": "Disabled accounts"
+        },
+        "suspended": {
+            "label": "Suspended",
+            "value": "0",
+            "subtitle": "Temporarily suspended"
+        }
+    },
+    "list": {
+        "title": "Employees",
+        "columns": {
+            "name": "Name",
+            "email": "Email",
+            "phone": "Phone",
+            "role": "Role",
+            "status": "Status",
+            "position": "Position",
+            "contractType": "Contract",
+            "createdAt": "Created At",
+            "actions": "Actions"
+        }
+    },
+    "form": {
+        "addTitle": "Add New Employee",
+        "editTitle": "Edit Employee",
+        "addDescription": "Fill in the details below to create a new employee.",
+        "editDescription": "Update the details below to edit the employee.",
+        "label": {
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "email": "Email",
+            "phone": "Phone",
+            "role": "Role",
+            "restaurantId": "Restaurant ID",
+            "position": "Position",
+            "contractType": "Contract Type",
+            "status": "Status"
+        },
+        "selectRolePlaceholder": "Select a role",
+        "selectStatusPlaceholder": "Select a status",
+        "selectContractPlaceholder": "Select a contract type",
+        "none": "None"
+    },
+    "role": {
+        "MANAGER": "Manager",
+        "ADMIN": "Admin",
+        "DELIVERY_MANAGER": "Delivery Manager"
+    },
+    "status": {
+        "ACTIVE": "Active",
+        "INACTIVE": "Inactive",
+        "SUSPENDED": "Suspended"
+    },
+    "contractType": {
+        "FULL_TIME": "Full Time",
+        "PART_TIME": "Part Time",
+        "CONTRACT": "Contract",
+        "INTERN": "Intern"
+    },
+    "confirmationDialog": {
+        "deleteTitle": "Are you sure you want to delete this employee?",
+        "deleteMessage": "This action cannot be undone. This will permanently delete the employee and remove all associated data."
+    },
+    "toast": {
+        "employeeCreated": "Employee has been created successfully",
+        "employeeUpdated": "Employee has been updated successfully",
+        "employeeDeleted": "Employee has been deleted successfully",
+        "employeeEnabled": "Employee has been enabled",
+        "employeeDisabled": "Employee has been disabled"
+    }
+}

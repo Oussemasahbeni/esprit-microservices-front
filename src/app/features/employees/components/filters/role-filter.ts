@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, output, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { provideIcons } from '@ng-icons/core';
-import { lucideListFilter, lucideSearch } from '@ng-icons/lucide';
+import { lucideBriefcase, lucideListFilter, lucideSearch, lucideShieldCheck, lucideTruck } from '@ng-icons/lucide';
 import { BrnCommandImports } from '@spartan-ng/brain/command';
 
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -9,10 +9,10 @@ import { HlmCheckboxImports } from '@spartan-ng/helm/checkbox';
 import { HlmCommandImports } from '@spartan-ng/helm/command';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmPopoverImports } from '@spartan-ng/helm/popover';
-import { USER_STATUSES, UserStatus } from '../../../../shared/models/user';
+import { EMPLOYEE_ROLES, EmployeeRole } from '../../../../shared/models/employee';
 
 @Component({
-  selector: 'adm-users-status-filter',
+  selector: 'adm-employees-role-filter',
   imports: [
     HlmButtonImports,
     HlmIconImports,
@@ -22,7 +22,7 @@ import { USER_STATUSES, UserStatus } from '../../../../shared/models/user';
     HlmCheckboxImports,
     TranslocoModule,
   ],
-  providers: [provideIcons({ lucideSearch, lucideListFilter })],
+  providers: [provideIcons({ lucideSearch, lucideListFilter, lucideShieldCheck, lucideBriefcase, lucideTruck })],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <hlm-popover
@@ -30,59 +30,59 @@ import { USER_STATUSES, UserStatus } from '../../../../shared/models/user';
       sideOffset="5"
       closeDelay="100"
       align="start"
-      [state]="_statusState()"
-      (stateChanged)="statusStateChanged($event)"
+      [state]="_rolesState()"
+      (stateChanged)="rolesStateChanged($event)"
     >
       <button type="button" hlmBtn hlmPopoverTrigger variant="outline" size="sm" class="border-dashed">
         <ng-icon hlm name="lucideListFilter" size="sm" />
-        {{ t('users.list.columns.status') }}
-        @if (_statusFilter().length) {
+        {{ t('employees.list.columns.role') }}
+        @if (_rolesFilter().length) {
           <div data-orientation="vertical" role="none" class="bg-border mx-2 h-4 w-px shrink-0"></div>
 
           <div class="flex gap-1">
-            @for (status of _statusFilter(); track status) {
+            @for (role of _rolesFilter(); track role) {
               <span *transloco="let t" class="bg-secondary text-secondary-foreground rounded px-1 py-0.5 text-xs">
-                {{ t('users.status.' + status) }}
+                {{ t('employees.role.' + role) }}
               </span>
             }
           </div>
         }
       </button>
-      <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-50 p-0">
+      <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-56 p-0">
         <hlm-command-input>
           <ng-icon hlm name="lucideSearch" class="text-muted-foreground" />
-          <input hlm-command-search-input [placeholder]="t('users.list.columns.status')" />
+          <input hlm-command-search-input [placeholder]="t('employees.list.columns.role')" />
         </hlm-command-input>
         <div *brnCommandEmpty hlmCommandEmpty>
           {{ t('common.noData') }}
         </div>
         <hlm-command-list>
           <hlm-command-group>
-            @for (status of _statusList(); track status) {
-              <button type="button" hlm-command-item [value]="status" (selected)="statusSelected(status)">
-                <hlm-checkbox class="mr-2" [checked]="isStatusSelected(status)" />
-                @switch (status) {
-                  @case ('active') {
-                    <ng-icon hlmIcon size="xs" class="text-green-600" name="lucideCircleCheck" />
+            @for (role of _rolesList(); track role) {
+              <button type="button" hlm-command-item [value]="role" (selected)="roleSelected(role)">
+                <hlm-checkbox class="mr-2" [checked]="isRoleSelected(role)" />
+                @switch (role) {
+                  @case ('ADMIN') {
+                    <ng-icon hlmIcon size="sm" name="lucideShieldCheck" />
                   }
-                  @case ('inactive') {
-                    <ng-icon hlmIcon size="xs" class="text-destructive" name="lucideCircleX" />
+                  @case ('MANAGER') {
+                    <ng-icon hlmIcon size="sm" name="lucideBriefcase" />
                   }
-                  @case ('pending') {
-                    <ng-icon hlmIcon size="xs" class="text-yellow-600" name="lucideLoader" />
+                  @case ('DELIVERY_MANAGER') {
+                    <ng-icon hlmIcon size="sm" name="lucideTruck" />
                   }
                 }
-                <span *transloco="let t; prefix: 'users.status'"> {{ t(status) }} </span>
+                <span *transloco="let t; prefix: 'employees.role'"> {{ t(role) }} </span>
               </button>
             }
-            @if (_statusFilter().length) {
+            @if (_rolesFilter().length) {
               <hlm-command-separator />
               <button
                 type="button"
                 hlm-command-item
                 class="mt-1 flex justify-center"
                 [value]="''"
-                (selected)="clearStatusFilter()"
+                (selected)="clearRolesFilter()"
               >
                 {{ t('common.clearFilter') }}
               </button>
@@ -93,45 +93,46 @@ import { USER_STATUSES, UserStatus } from '../../../../shared/models/user';
     </hlm-popover>
   `,
 })
-export class StatusFilter {
+export class RoleFilter {
   // ==========================================
   // Outputs
   // ==========================================
 
-  public readonly statusChanged = output<UserStatus[]>();
+  public readonly rolesChanged = output<EmployeeRole[]>();
 
   // ==========================================
   // State
   // ==========================================
 
-  protected readonly _statusFilter = signal<UserStatus[]>([]);
-  protected readonly _statusList = signal([...USER_STATUSES]);
-  protected readonly _statusState = signal<'closed' | 'open'>('closed');
+  protected readonly _rolesFilter = signal<EmployeeRole[]>([]);
+  protected readonly _rolesList = signal([...EMPLOYEE_ROLES]);
+  protected readonly _rolesState = signal<'closed' | 'open'>('closed');
 
   // ==========================================
   // Public Methods
   // ==========================================
 
-  protected clearStatusFilter(): void {
-    this._statusFilter.set([]);
-    this.statusChanged.emit(this._statusFilter());
+  protected rolesStateChanged(state: 'open' | 'closed') {
+    this._rolesState.set(state);
   }
 
-  protected statusStateChanged(state: 'open' | 'closed') {
-    this._statusState.set(state);
+  protected isRoleSelected(role: EmployeeRole): boolean {
+    return this._rolesFilter().some((r) => r === role);
   }
 
-  protected isStatusSelected(status: UserStatus): boolean {
-    return this._statusFilter().some((s) => s === status);
-  }
-  protected statusSelected(status: UserStatus): void {
-    const current = this._statusFilter();
-    const index = current.indexOf(status);
+  protected roleSelected(role: EmployeeRole): void {
+    const current = this._rolesFilter();
+    const index = current.indexOf(role);
     if (index === -1) {
-      this._statusFilter.set([...current, status]);
+      this._rolesFilter.set([...current, role]);
     } else {
-      this._statusFilter.set(current.filter((s) => s !== status));
+      this._rolesFilter.set(current.filter((r) => r !== role));
     }
-    this.statusChanged.emit(this._statusFilter());
+    this.rolesChanged.emit(this._rolesFilter());
+  }
+
+  protected clearRolesFilter(): void {
+    this._rolesFilter.set([]);
+    this.rolesChanged.emit(this._rolesFilter());
   }
 }

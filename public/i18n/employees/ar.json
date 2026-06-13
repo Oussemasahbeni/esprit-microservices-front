@@ -1,0 +1,87 @@
+{
+    "cards": {
+        "total": {
+            "label": "إجمالي الموظفين",
+            "value": "0",
+            "subtitle": "جميع الموظفين المسجلين",
+            "infoTooltip": "إجمالي عدد الموظفين في النظام."
+        },
+        "active": {
+            "label": "نشط",
+            "value": "0",
+            "subtitle": "الحسابات النشطة حاليًا"
+        },
+        "inactive": {
+            "label": "غير نشط",
+            "value": "0",
+            "subtitle": "الحسابات المعطّلة"
+        },
+        "suspended": {
+            "label": "موقوف",
+            "value": "0",
+            "subtitle": "موقوف مؤقتًا"
+        }
+    },
+    "list": {
+        "title": "الموظفون",
+        "columns": {
+            "name": "الاسم",
+            "email": "البريد الإلكتروني",
+            "phone": "الهاتف",
+            "role": "الدور",
+            "status": "الحالة",
+            "position": "المنصب",
+            "contractType": "العقد",
+            "createdAt": "تاريخ الإنشاء",
+            "actions": "الإجراءات"
+        }
+    },
+    "form": {
+        "addTitle": "إضافة موظف جديد",
+        "editTitle": "تعديل الموظف",
+        "addDescription": "يرجى إدخال البيانات أدناه لإنشاء موظف جديد.",
+        "editDescription": "يرجى تحديث البيانات أدناه لتعديل الموظف.",
+        "label": {
+            "firstName": "الاسم الأول",
+            "lastName": "اسم العائلة",
+            "email": "البريد الإلكتروني",
+            "phone": "الهاتف",
+            "role": "الدور",
+            "restaurantId": "معرّف المطعم",
+            "position": "المنصب",
+            "contractType": "نوع العقد",
+            "status": "الحالة"
+        },
+        "selectRolePlaceholder": "اختر دورًا",
+        "selectStatusPlaceholder": "اختر حالة",
+        "selectContractPlaceholder": "اختر نوع العقد",
+        "none": "لا شيء"
+    },
+    "role": {
+        "MANAGER": "مدير",
+        "ADMIN": "مسؤول",
+        "DELIVERY_MANAGER": "مدير التوصيل"
+    },
+    "status": {
+        "ACTIVE": "نشط",
+        "INACTIVE": "غير نشط",
+        "SUSPENDED": "موقوف"
+    },
+    "contractType": {
+        "FULL_TIME": "دوام كامل",
+        "PART_TIME": "دوام جزئي",
+        "CONTRACT": "عقد",
+        "INTERN": "متدرّب"
+    },
+    "confirmationDialog": {
+        "deleteTitle": "هل أنت متأكد أنك تريد حذف هذا الموظف؟",
+        "deleteMessage": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف الموظف نهائيًا مع جميع البيانات المرتبطة به."
+    },
+    "toast": {
+        "employeeCreated": "تم إنشاء الموظف بنجاح",
+        "employeeUpdated": "تم تحديث الموظف بنجاح",
+        "employeeDeleted": "تم حذف الموظف بنجاح",
+        "employeeEnabled": "تم تفعيل الموظف",
+        "employeeDisabled": "تم تعطيل الموظف"
+    }
+}

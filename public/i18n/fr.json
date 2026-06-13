@@ -56,6 +56,7 @@
         "tasks": "Gestion des tâches",
         "calendar": "Calendrier",
         "users": "Utilisateurs",
+        "employees": "Employés",
         "notFound": "Page introuvable",
         "unauthorized": "Accès refusé",
         "other": "Autre",
@@ -76,12 +77,13 @@
         "noData": "Aucune donnée disponible.",
         "clearFilter": "Effacer le filtre",
         "searchPlaceholder": "Rechercher...",
+        "error": "Une erreur s'est produite. Veuillez réessayer.",
         "unsavedChangesWarning": "Vous avez des modifications non enregistrées. Êtes-vous sûr de vouloir quitter sans enregistrer ?"
     },
     "actionDropdown": {
         "edit": "Modifier",
-        "makeCopy": "Faire une copie",
-        "favorite": "Favori",
+        "enable": "Activer",
+        "disable": "Désactiver",
         "delete": "Supprimer"
     },
     "buttons": {

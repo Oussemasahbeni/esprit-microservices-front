@@ -90,7 +90,7 @@ export class Navigation {
             { title: 'Dashboard 2', key: 'dashboard-2', url: '/dashboard/dashboard-2', icon: 'lucideLayoutDashboard' },
           ],
         },
-        { title: 'Users', key: 'users', url: '/users', icon: 'lucideUsers' },
+        { title: 'Employees', key: 'employees', url: '/employees', icon: 'lucideUsers' },
       ],
     },
   ];

@@ -13,10 +13,10 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
-import { exhaustMap, filter } from 'rxjs';
-import { User } from '../../../../shared/models/user';
-import { UserService } from '../../service/user.service';
-import { UserForm } from '../form/user-form';
+import { exhaustMap, filter, Observable } from 'rxjs';
+import { Employee } from '../../../../shared/models/employee';
+import { EmployeeService } from '../../service/employee.service';
+import { EmployeeForm } from '../form/employee-form';
 
 @Component({
   selector: 'adm-action-dropdown',
@@ -47,15 +47,19 @@ import { UserForm } from '../form/user-form';
       <ng-container *transloco="let t; prefix: 'actionDropdown'">
         <hlm-dropdown-menu>
           <hlm-dropdown-menu-group>
-            <button type="button" hlmDropdownMenuItem (click)="onEditUser()">
+            <button type="button" hlmDropdownMenuItem (click)="onEditEmployee()">
               {{ t('edit') }}
             </button>
-            <button type="button" hlmDropdownMenuItem>
-              {{ t('makeCopy') }}
-            </button>
-            <button type="button" hlmDropdownMenuItem>
-              {{ t('favorite') }}
-            </button>
+            @if (employee().status !== 'ACTIVE') {
+              <button type="button" hlmDropdownMenuItem (click)="onToggleStatus(true)">
+                {{ t('enable') }}
+              </button>
+            }
+            @if (employee().status === 'ACTIVE') {
+              <button type="button" hlmDropdownMenuItem (click)="onToggleStatus(false)">
+                {{ t('disable') }}
+              </button>
+            }
           </hlm-dropdown-menu-group>
           <hlm-dropdown-menu-separator />
           <hlm-dropdown-menu-group>
@@ -73,10 +77,10 @@ export class ActionDropdown {
   // Services
   // ==========================================
 
-  private readonly _userService = inject(UserService);
+  private readonly _employeeService = inject(EmployeeService);
   private readonly _transloco = inject(TranslocoService);
   private readonly _hlmDialogService = inject(HlmDialogService);
-  private readonly _context = injectFlexRenderContext<CellContext<User, unknown>>();
+  private readonly _context = injectFlexRenderContext<CellContext<Employee, unknown>>();
   private readonly _confirmationDialogService = inject(ConfirmationDialogService);
   private readonly _destroyRef = inject(DestroyRef);
 
@@ -87,50 +91,76 @@ export class ActionDropdown {
   public readonly onSuccess = input<() => void>();
 
   // ==========================================
+  // Helpers
+  // ==========================================
+
+  protected employee(): Employee {
+    return this._context.row.original;
+  }
+
+  // ==========================================
   // Public Methods
   // ==========================================
 
-  openConfirmationDialog() {
-    const user = this._context.row.original;
+  protected onToggleStatus(enable: boolean): void {
+    const employee = this.employee();
+    const request$: Observable<Employee> = enable
+      ? this._employeeService.enableEmployee(employee.id)
+      : this._employeeService.disableEmployee(employee.id);
+
+    request$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe({
+      next: () => {
+        toast.success(
+          this._transloco.translate(enable ? 'employees.toast.employeeEnabled' : 'employees.toast.employeeDisabled')
+        );
+        this.onSuccess()?.();
+      },
+      error: (err) => {
+        console.error('Status change failed', err);
+        toast.error(this._transloco.translate('common.error'));
+      },
+    });
+  }
+
+  protected openConfirmationDialog(): void {
+    const employee = this.employee();
 
     this._confirmationDialogService
       .open({
-        title: this._transloco.translate('users.confirmationDialog.deleteTitle'),
-        message: this._transloco.translate('users.confirmationDialog.deleteMessage'),
+        title: this._transloco.translate('employees.confirmationDialog.deleteTitle'),
+        message: this._transloco.translate('employees.confirmationDialog.deleteMessage'),
         confirmText: this._transloco.translate('buttons.confirm'),
         cancelText: this._transloco.translate('buttons.cancel'),
         variant: 'destructive',
       })
       .closed$.pipe(
         filter((result) => result === 'confirm'),
-        exhaustMap(() => this._userService.deleteUser(user.id))
+        exhaustMap(() => this._employeeService.deleteEmployee(employee.id)),
+        takeUntilDestroyed(this._destroyRef)
       )
       .subscribe({
         next: () => {
-          toast.success(this._transloco.translate('users.toast.userDeleted'));
-          const refresh = this.onSuccess();
-          if (refresh) refresh();
+          toast.success(this._transloco.translate('employees.toast.employeeDeleted'));
+          this.onSuccess()?.();
         },
         error: (err) => {
           console.error('Delete failed', err);
-          toast.error('Could not delete user');
+          toast.error(this._transloco.translate('common.error'));
         },
       });
   }
 
-  onEditUser() {
-    const user = this._context.row.original;
-    const dialogRef = this._hlmDialogService.open(UserForm, {
-      context: { user },
+  protected onEditEmployee(): void {
+    const employee = this.employee();
+    const dialogRef = this._hlmDialogService.open(EmployeeForm, {
+      context: { employee },
       contentClass: 'max-w-3xl',
       autoFocus: 'dialog',
     });
 
     dialogRef.closed$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((result) => {
-      console.log(result);
       if (result) {
-        const refresh = this.onSuccess();
-        if (refresh) refresh();
+        this.onSuccess()?.();
       }
     });
   }

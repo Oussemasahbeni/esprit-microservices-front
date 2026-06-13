@@ -57,6 +57,7 @@
         "tasks": "إدارة المهام",
         "calendar": "الجدول الزمني",
         "users": "شؤون المستخدمين",
+        "employees": "الموظفون",
         "settings": "الإعدادات",
         "other": "أخرى",
         "aiAssistant": "مساعد الذكاء الاصطناعي",
@@ -77,12 +78,13 @@
         "noData": "لا توجد بيانات متاحة.",
         "clearFilter": "مسح الفلتر",
         "searchPlaceholder": "بحث...",
+        "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
         "unsavedChangesWarning": "لديك تغييرات غير محفوظة. هل أنت متأكد أنك تريد المغادرة دون حفظ؟"
     },
     "actionDropdown": {
         "edit": "تعديل",
-        "makeCopy": "إنشاء نسخة",
-        "favorite": "مفضل",
+        "enable": "تفعيل",
+        "disable": "تعطيل",
         "delete": "حذف"
     },
     "buttons": {

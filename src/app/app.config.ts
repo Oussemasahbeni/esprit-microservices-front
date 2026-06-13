@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import {
   provideRouter,
-  TitleStrategy,
   withComponentInputBinding,
   withInMemoryScrolling,
   withPreloading,
@@ -21,12 +20,11 @@ import { routes } from './app.routes';
 import { FlagBasedPreloadingStrategy } from './core/config/flag-based-preloading.strategy';
 import { Language, LANGUAGES, LanguageService } from './core/config/language.service';
 import { ThemeService } from './core/config/theme.service';
-import { TranslateTitleStrategy } from './core/config/title-i18n-strategy';
 import { TranslocoHttpLoader } from './transloco-loader';
 
-import { decodedIdTokenSchema, Oidc } from '@core/auth/oidc.service';
+import { bearerInterceptor } from '@core/auth/auth.interceptor';
+import { provideOidc } from '@core/auth/oidc.service';
 import { provideHlmSidebarConfig } from '@spartan-ng/helm/sidebar';
-import { environment } from '../environments/environment';
 
 function isLanguage(value: string): value is Language {
   return (LANGUAGES as readonly string[]).includes(value);
@@ -56,14 +54,8 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })
     ),
-    provideHttpClient(
-      withInterceptors([
-        Oidc.createBearerInterceptor({
-          shouldInjectAccessToken: (request) =>
-            new URL(request.url, window.location.origin).origin === new URL(environment.apiUrl).origin,
-        }),
-      ])
-    ),
+    provideOidc(),
+    provideHttpClient(withInterceptors([bearerInterceptor])),
     provideTransloco({
       config: {
         availableLangs: ['en', 'fr', 'ar'],
@@ -91,20 +83,6 @@ export const appConfig: ApplicationConfig = {
 
     provideHlmSidebarConfig({
       closeMobileSidebarOnMenuButtonClick: true,
-    }),
-    {
-      provide: TitleStrategy,
-      useClass: TranslateTitleStrategy,
-    },
-    Oidc.provide(async () => {
-      return {
-        issuerUri: environment.issuerUri,
-        clientId: environment.clientId,
-        debugLogs: isDevMode(),
-        autoLogin: true,
-        providerAwaitsInitialization: false,
-        decodedIdTokenSchema,
-      };
     }),
   ],
 };

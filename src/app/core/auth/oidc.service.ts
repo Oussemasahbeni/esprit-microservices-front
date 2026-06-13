@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { EnvironmentProviders, Injectable, isDevMode } from '@angular/core';
 import { AbstractOidcService } from 'oidc-spa/angular';
 import { z } from 'zod';
+import { environment } from '../../../environments/environment';
 
 export const decodedIdTokenSchema = z.object({
   iat: z.number(),
@@ -20,3 +21,14 @@ export type AuthUser = Readonly<DecodedIdToken>;
 
 @Injectable({ providedIn: 'root' })
 export class Oidc extends AbstractOidcService<DecodedIdToken> {}
+
+export const provideOidc = (): EnvironmentProviders =>
+  Oidc.provide(async () => {
+    return {
+      issuerUri: environment.issuerUri,
+      clientId: environment.clientId,
+      debugLogs: isDevMode(),
+      autoLogin: true,
+      decodedIdTokenSchema,
+    };
+  });
