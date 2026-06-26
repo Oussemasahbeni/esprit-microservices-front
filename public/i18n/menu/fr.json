@@ -1,0 +1,92 @@
+{
+    "overview": {
+        "label": "Gestion Menu",
+        "title": "Menu restaurant en temps reel",
+        "available": "Disponibles",
+        "unavailable": "Indisponibles",
+        "promos": "Promos"
+    },
+    "toolbar": {
+        "label": "Catalogue",
+        "title": "Plats, categories et campagnes"
+    },
+    "buttons": {
+        "refresh": "Actualiser",
+        "category": "Categorie",
+        "promotion": "Promotion",
+        "dish": "Plat",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "close": "Fermer",
+        "save": "Enregistrer",
+        "markUnavailable": "Indisponible",
+        "markAvailable": "Disponible"
+    },
+    "filters": {
+        "search": "Rechercher plats, ingredients, allergenes...",
+        "allCategories": "Toutes categories",
+        "allAvailability": "Tous statuts",
+        "available": "Disponible",
+        "unavailable": "Indisponible"
+    },
+    "status": {
+        "available": "Disponible",
+        "unavailable": "Indisponible",
+        "active": "Actif",
+        "inactive": "Inactif"
+    },
+    "states": {
+        "loading": "Chargement du menu...",
+        "empty": "Aucun plat trouve",
+        "emptyHint": "Changez les filtres ou ajoutez le premier plat."
+    },
+    "dish": {
+        "noDescription": "Aucune description."
+    },
+    "categories": {
+        "label": "Structure",
+        "title": "Categories"
+    },
+    "promotions": {
+        "label": "Campagnes",
+        "title": "Promotions",
+        "empty": "Aucune promotion active."
+    },
+    "editor": {
+        "label": "Editeur",
+        "newDish": "Nouveau plat",
+        "editDish": "Modifier plat",
+        "newCategory": "Nouvelle categorie",
+        "newPromotion": "Nouvelle promotion"
+    },
+    "form": {
+        "name": "Nom",
+        "category": "Categorie",
+        "dish": "Plat",
+        "price": "Prix",
+        "photoUrl": "URL photo",
+        "description": "Description",
+        "ingredients": "Ingredients",
+        "allergens": "Allergenes",
+        "variants": "Variantes",
+        "csvPlaceholder": "Valeurs separees par virgule",
+        "variantPlaceholder": "Grand:4, Fromage extra:2",
+        "available": "Disponible",
+        "active": "Actif",
+        "displayOrder": "Ordre",
+        "discount": "Remise %",
+        "startsAt": "Debut",
+        "endsAt": "Fin",
+        "targetType": "Type cible",
+        "target": "Cible"
+    },
+    "toast": {
+        "dishCreated": "Plat cree",
+        "dishUpdated": "Plat modifie",
+        "dishDeleted": "Plat supprime",
+        "categoryCreated": "Categorie creee",
+        "promotionCreated": "Promotion creee",
+        "availabilityUpdated": "Disponibilite modifiee"
+    },
+    "confirmDelete": "Supprimer {{name}} ?"
+}

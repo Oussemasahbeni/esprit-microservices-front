@@ -1,0 +1,92 @@
+{
+    "overview": {
+        "label": "Menu Management",
+        "title": "Live restaurant menu",
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "promos": "Promos"
+    },
+    "toolbar": {
+        "label": "Catalog",
+        "title": "Dishes, categories and campaigns"
+    },
+    "buttons": {
+        "refresh": "Refresh",
+        "category": "Category",
+        "promotion": "Promotion",
+        "dish": "Dish",
+        "edit": "Edit",
+        "delete": "Delete",
+        "close": "Close",
+        "save": "Save",
+        "markUnavailable": "Mark off",
+        "markAvailable": "Mark on"
+    },
+    "filters": {
+        "search": "Search dishes, ingredients, allergens...",
+        "allCategories": "All categories",
+        "allAvailability": "All status",
+        "available": "Available",
+        "unavailable": "Unavailable"
+    },
+    "status": {
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "active": "Active",
+        "inactive": "Inactive"
+    },
+    "states": {
+        "loading": "Loading menu...",
+        "empty": "No dishes found",
+        "emptyHint": "Change filters or add the first dish."
+    },
+    "dish": {
+        "noDescription": "No description yet."
+    },
+    "categories": {
+        "label": "Structure",
+        "title": "Categories"
+    },
+    "promotions": {
+        "label": "Campaigns",
+        "title": "Promotions",
+        "empty": "No active promotions yet."
+    },
+    "editor": {
+        "label": "Editor",
+        "newDish": "New dish",
+        "editDish": "Edit dish",
+        "newCategory": "New category",
+        "newPromotion": "New promotion"
+    },
+    "form": {
+        "name": "Name",
+        "category": "Category",
+        "dish": "Dish",
+        "price": "Price",
+        "photoUrl": "Photo URL",
+        "description": "Description",
+        "ingredients": "Ingredients",
+        "allergens": "Allergens",
+        "variants": "Variants",
+        "csvPlaceholder": "Comma separated values",
+        "variantPlaceholder": "Large:4, Extra cheese:2",
+        "available": "Available",
+        "active": "Active",
+        "displayOrder": "Display order",
+        "discount": "Discount %",
+        "startsAt": "Starts",
+        "endsAt": "Ends",
+        "targetType": "Target type",
+        "target": "Target"
+    },
+    "toast": {
+        "dishCreated": "Dish created",
+        "dishUpdated": "Dish updated",
+        "dishDeleted": "Dish deleted",
+        "categoryCreated": "Category created",
+        "promotionCreated": "Promotion created",
+        "availabilityUpdated": "Availability updated"
+    },
+    "confirmDelete": "Delete {{name}}?"
+}

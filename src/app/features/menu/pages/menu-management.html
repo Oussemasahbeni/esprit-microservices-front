@@ -1,0 +1,368 @@
+<div *transloco="let t; prefix: 'menu'" class="@container/main flex flex-1 flex-col gap-6">
+  <section class="grid gap-4 @3xl/main:grid-cols-5">
+    <div class="border-border bg-card rounded-lg border p-5 @3xl/main:col-span-2">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-muted-foreground text-sm">{{ t('overview.label') }}</p>
+          <h1 class="mt-1 text-2xl font-semibold tracking-normal">{{ t('overview.title') }}</h1>
+        </div>
+        <span hlmBadge variant="outline">
+          <ng-icon hlmIcon name="lucideUtensils" size="sm" />
+          {{ summary()?.totalDishes ?? 0 }}
+        </span>
+      </div>
+      <div class="mt-5 grid grid-cols-3 gap-3">
+        <div class="rounded-md border p-3">
+          <p class="text-muted-foreground text-xs">{{ t('overview.available') }}</p>
+          <p class="text-xl font-semibold tabular-nums">{{ summary()?.availableDishes ?? 0 }}</p>
+        </div>
+        <div class="rounded-md border p-3">
+          <p class="text-muted-foreground text-xs">{{ t('overview.unavailable') }}</p>
+          <p class="text-xl font-semibold tabular-nums">{{ summary()?.unavailableDishes ?? 0 }}</p>
+        </div>
+        <div class="rounded-md border p-3">
+          <p class="text-muted-foreground text-xs">{{ t('overview.promos') }}</p>
+          <p class="text-xl font-semibold tabular-nums">{{ summary()?.activePromotions ?? 0 }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-border bg-card rounded-lg border p-5 @3xl/main:col-span-3">
+      <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <div>
+          <p class="text-muted-foreground text-sm">{{ t('toolbar.label') }}</p>
+          <h2 class="text-lg font-semibold">{{ t('toolbar.title') }}</h2>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" hlmBtn variant="outline" (click)="refresh()">
+            <ng-icon hlmIcon name="lucideRefreshCcw" size="sm" />
+            {{ t('buttons.refresh') }}
+          </button>
+          <button type="button" hlmBtn variant="secondary" (click)="openCategoryForm()">
+            <ng-icon hlmIcon name="lucideTag" size="sm" />
+            {{ t('buttons.category') }}
+          </button>
+          <button type="button" hlmBtn variant="secondary" (click)="openPromotionForm()">
+            <ng-icon hlmIcon name="lucidePercent" size="sm" />
+            {{ t('buttons.promotion') }}
+          </button>
+          <button type="button" hlmBtn (click)="openDishForm()">
+            <ng-icon hlmIcon name="lucidePlus" size="sm" />
+            {{ t('buttons.dish') }}
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-5 grid gap-3 md:grid-cols-[1fr_180px_160px]">
+        <hlm-input-group>
+          <input hlmInputGroupInput class="h-9" [placeholder]="t('filters.search')" [value]="search()" (input)="setSearch($event)" />
+          <div hlmInputGroupAddon>
+            <ng-icon name="lucideSearch" />
+          </div>
+          <hlm-input-group-addon align="inline-end">
+            @if (search()) {
+              <ng-icon name="lucideX" (click)="search.set('')" />
+            }
+          </hlm-input-group-addon>
+        </hlm-input-group>
+
+        <select
+          class="border-input bg-background ring-offset-background focus-visible:ring-ring h-9 rounded-md border px-3 text-sm outline-none focus-visible:ring-2"
+          [value]="selectedCategoryId()"
+          (change)="setCategory($event)"
+        >
+          <option value="all">{{ t('filters.allCategories') }}</option>
+          @for (category of categories(); track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+
+        <select
+          class="border-input bg-background ring-offset-background focus-visible:ring-ring h-9 rounded-md border px-3 text-sm outline-none focus-visible:ring-2"
+          [value]="availability()"
+          (change)="setAvailability($event)"
+        >
+          <option value="all">{{ t('filters.allAvailability') }}</option>
+          <option value="available">{{ t('filters.available') }}</option>
+          <option value="unavailable">{{ t('filters.unavailable') }}</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid gap-5 @6xl/main:grid-cols-[minmax(0,1fr)_380px]">
+    <div class="flex min-w-0 flex-col gap-4">
+      @if (menuResource.isLoading()) {
+        <div class="border-border bg-card rounded-lg border p-8 text-center text-sm text-muted-foreground">
+          {{ t('states.loading') }}
+        </div>
+      } @else if (filteredDishes().length === 0) {
+        <div class="border-border bg-card rounded-lg border p-8 text-center">
+          <ng-icon hlmIcon name="lucideUtensils" class="text-muted-foreground mx-auto" size="xl" />
+          <p class="mt-3 font-medium">{{ t('states.empty') }}</p>
+          <p class="text-muted-foreground text-sm">{{ t('states.emptyHint') }}</p>
+        </div>
+      } @else {
+        <div class="grid gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
+          @for (dish of filteredDishes(); track dish.id) {
+            <article class="border-border bg-card overflow-hidden rounded-lg border">
+              <div class="bg-muted relative aspect-[4/3] overflow-hidden">
+                @if (dish.photoUrl) {
+                  <img class="h-full w-full object-cover" [src]="dish.photoUrl" [alt]="dish.name" />
+                } @else {
+                  <div class="flex h-full items-center justify-center">
+                    <ng-icon hlmIcon name="lucideImage" class="text-muted-foreground" size="xl" />
+                  </div>
+                }
+                <div class="absolute left-3 top-3 flex gap-2">
+                  <span hlmBadge [variant]="dish.available ? 'default' : 'destructive'">
+                    <ng-icon hlmIcon [name]="dish.available ? 'lucideCircleCheck' : 'lucideCircleX'" size="xs" />
+                    {{ dish.available ? t('status.available') : t('status.unavailable') }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="space-y-4 p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <p class="text-muted-foreground text-xs">{{ dish.category.name }}</p>
+                    <h3 class="truncate text-base font-semibold">{{ dish.name }}</h3>
+                  </div>
+                  <p class="font-semibold tabular-nums">{{ dish.price | currency: 'EUR' }}</p>
+                </div>
+
+                <p class="text-muted-foreground line-clamp-2 min-h-10 text-sm">{{ dish.description || t('dish.noDescription') }}</p>
+
+                <div class="flex flex-wrap gap-1.5">
+                  @for (ingredient of dish.ingredients.slice(0, 3); track ingredient) {
+                    <span hlmBadge variant="outline" class="text-muted-foreground">
+                      <ng-icon hlmIcon name="lucideLeaf" size="xs" />
+                      {{ ingredient }}
+                    </span>
+                  }
+                  @if (dish.allergens.length) {
+                    <span hlmBadge variant="outline" class="border-yellow-500/50 text-yellow-700 dark:text-yellow-400">
+                      <ng-icon hlmIcon name="lucideAlertTriangle" size="xs" />
+                      {{ dish.allergens.length }}
+                    </span>
+                  }
+                </div>
+
+                <div class="flex gap-2">
+                  <button type="button" hlmBtn size="sm" variant="outline" class="flex-1" (click)="openDishForm(dish)">
+                    <ng-icon hlmIcon name="lucidePencil" size="sm" />
+                    {{ t('buttons.edit') }}
+                  </button>
+                  <button type="button" hlmBtn size="sm" variant="secondary" class="flex-1" (click)="toggleAvailability(dish)">
+                    {{ dish.available ? t('buttons.markUnavailable') : t('buttons.markAvailable') }}
+                  </button>
+                  <button type="button" hlmBtn size="icon" variant="ghost" (click)="deleteDish(dish)" [attr.aria-label]="t('buttons.delete')">
+                    <ng-icon hlmIcon name="lucideTrash2" size="sm" />
+                  </button>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </div>
+
+    <aside class="flex flex-col gap-4">
+      <div class="border-border bg-card rounded-lg border p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-muted-foreground text-sm">{{ t('categories.label') }}</p>
+            <h2 class="font-semibold">{{ t('categories.title') }}</h2>
+          </div>
+          <span hlmBadge variant="outline">{{ categories().length }}</span>
+        </div>
+        <div class="mt-4 space-y-2">
+          @for (category of categories(); track category.id) {
+            <button
+              type="button"
+              class="hover:bg-muted flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm"
+              (click)="selectedCategoryId.set(category.id)"
+            >
+              <span>{{ category.name }}</span>
+              <span class="text-muted-foreground">{{ category.active ? t('status.active') : t('status.inactive') }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="border-border bg-card rounded-lg border p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-muted-foreground text-sm">{{ t('promotions.label') }}</p>
+            <h2 class="font-semibold">{{ t('promotions.title') }}</h2>
+          </div>
+          <ng-icon hlmIcon name="lucideSparkles" class="text-primary" />
+        </div>
+        <div class="mt-4 space-y-3">
+          @for (promo of promotions().slice(0, 4); track promo.id) {
+            <div class="rounded-md border p-3">
+              <div class="flex items-center justify-between gap-3">
+                <p class="font-medium">{{ promo.name }}</p>
+                <span hlmBadge variant="outline">-{{ promo.discountPercent }}%</span>
+              </div>
+              <p class="text-muted-foreground mt-1 text-xs">
+                {{ promo.categoryName || promo.dishName }} · {{ promo.endsAt | date: 'mediumDate' }}
+              </p>
+            </div>
+          } @empty {
+            <p class="text-muted-foreground text-sm">{{ t('promotions.empty') }}</p>
+          }
+        </div>
+      </div>
+
+      @if (editorMode()) {
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+        <div class="border-border bg-card max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border p-5 shadow-2xl">
+          <div class="mb-4 flex items-start justify-between gap-4">
+            <div>
+              <p class="text-muted-foreground text-sm">{{ t('editor.label') }}</p>
+              <h2 class="font-semibold">
+                @switch (editorMode()) {
+                  @case ('dish') {
+                    {{ editingDish() ? t('editor.editDish') : t('editor.newDish') }}
+                  }
+                  @case ('category') {
+                    {{ t('editor.newCategory') }}
+                  }
+                  @case ('promotion') {
+                    {{ t('editor.newPromotion') }}
+                  }
+                }
+              </h2>
+            </div>
+            <button type="button" hlmBtn size="icon" variant="ghost" (click)="closeEditor()" [attr.aria-label]="t('buttons.close')">
+              <ng-icon hlmIcon name="lucideX" size="sm" />
+            </button>
+          </div>
+
+          @switch (editorMode()) {
+            @case ('dish') {
+              <form class="space-y-3" [formGroup]="dishForm" (ngSubmit)="saveDish()">
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.name') }}</hlm-field-label>
+                  <input hlmInput formControlName="name" />
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.category') }}</hlm-field-label>
+                  <select class="border-input bg-background h-9 w-full rounded-md border px-3 text-sm" formControlName="categoryId">
+                    @for (category of categories(); track category.id) {
+                      <option [value]="category.id">{{ category.name }}</option>
+                    }
+                  </select>
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.price') }}</hlm-field-label>
+                  <input hlmInput type="number" min="0" step="0.01" formControlName="price" />
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.photoUrl') }}</hlm-field-label>
+                  <input hlmInput formControlName="photoUrl" />
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.description') }}</hlm-field-label>
+                  <textarea hlmTextarea rows="3" formControlName="description"></textarea>
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.ingredients') }}</hlm-field-label>
+                  <input hlmInput formControlName="ingredients" [placeholder]="t('form.csvPlaceholder')" />
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.allergens') }}</hlm-field-label>
+                  <input hlmInput formControlName="allergens" [placeholder]="t('form.csvPlaceholder')" />
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.variants') }}</hlm-field-label>
+                  <input hlmInput formControlName="variants" [placeholder]="t('form.variantPlaceholder')" />
+                </hlm-field>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" formControlName="available" />
+                  {{ t('form.available') }}
+                </label>
+                <button type="submit" hlmBtn class="w-full" [disabled]="isSubmitting()">{{ t('buttons.save') }}</button>
+              </form>
+            }
+            @case ('category') {
+              <form class="space-y-3" [formGroup]="categoryForm" (ngSubmit)="saveCategory()">
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.name') }}</hlm-field-label>
+                  <input hlmInput formControlName="name" />
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.displayOrder') }}</hlm-field-label>
+                  <input hlmInput type="number" formControlName="displayOrder" />
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.description') }}</hlm-field-label>
+                  <textarea hlmTextarea rows="3" formControlName="description"></textarea>
+                </hlm-field>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" formControlName="active" />
+                  {{ t('form.active') }}
+                </label>
+                <button type="submit" hlmBtn class="w-full" [disabled]="isSubmitting()">{{ t('buttons.save') }}</button>
+              </form>
+            }
+            @case ('promotion') {
+              <form class="space-y-3" [formGroup]="promotionForm" (ngSubmit)="savePromotion()">
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.name') }}</hlm-field-label>
+                  <input hlmInput formControlName="name" />
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.discount') }}</hlm-field-label>
+                  <input hlmInput type="number" min="0" max="100" step="0.01" formControlName="discountPercent" />
+                </hlm-field>
+                <div class="grid grid-cols-2 gap-3">
+                  <hlm-field>
+                    <hlm-field-label>{{ t('form.startsAt') }}</hlm-field-label>
+                    <input hlmInput type="datetime-local" formControlName="startsAt" />
+                  </hlm-field>
+                  <hlm-field>
+                    <hlm-field-label>{{ t('form.endsAt') }}</hlm-field-label>
+                    <input hlmInput type="datetime-local" formControlName="endsAt" />
+                  </hlm-field>
+                </div>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.targetType') }}</hlm-field-label>
+                  <select class="border-input bg-background h-9 w-full rounded-md border px-3 text-sm" formControlName="targetType">
+                    <option value="category">{{ t('form.category') }}</option>
+                    <option value="dish">{{ t('form.dish') }}</option>
+                  </select>
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.target') }}</hlm-field-label>
+                  <select class="border-input bg-background h-9 w-full rounded-md border px-3 text-sm" formControlName="targetId">
+                    @if (promotionForm.controls.targetType.value === 'category') {
+                      @for (category of categories(); track category.id) {
+                        <option [value]="category.id">{{ category.name }}</option>
+                      }
+                    } @else {
+                      @for (dish of dishes(); track dish.id) {
+                        <option [value]="dish.id">{{ dish.name }}</option>
+                      }
+                    }
+                  </select>
+                </hlm-field>
+                <hlm-field>
+                  <hlm-field-label>{{ t('form.description') }}</hlm-field-label>
+                  <textarea hlmTextarea rows="3" formControlName="description"></textarea>
+                </hlm-field>
+                <label class="flex items-center gap-2 text-sm">
+                  <input type="checkbox" formControlName="active" />
+                  {{ t('form.active') }}
+                </label>
+                <button type="submit" hlmBtn class="w-full" [disabled]="isSubmitting()">{{ t('buttons.save') }}</button>
+              </form>
+            }
+          }
+        </div>
+        </div>
+      }
+    </aside>
+  </section>
+</div>

@@ -43,6 +43,12 @@ export const routes: Routes = [
         data: { breadcrumb: 'navigation.employees', preload: true },
         loadChildren: () => import('./features/employees/routes'),
       },
+      {
+        path: 'menu',
+        title: 'menu',
+        data: { breadcrumb: 'navigation.menu', preload: true },
+        loadChildren: () => import('./features/menu/routes'),
+      },
     ],
   },
 

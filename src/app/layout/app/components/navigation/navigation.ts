@@ -16,6 +16,7 @@ import {
   lucideLayoutDashboard,
   lucideLock,
   lucideSettings,
+  lucideUtensils,
   lucideUsers,
 } from '@ng-icons/lucide';
 import { HlmCollapsibleImports } from '@spartan-ng/helm/collapsible';
@@ -57,6 +58,7 @@ import { NavUser } from '../user/user';
       lucideAlertTriangle,
       lucideSettings,
       lucideBot,
+      lucideUtensils,
     }),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -91,6 +93,7 @@ export class Navigation {
           ],
         },
         { title: 'Employees', key: 'employees', url: '/employees', icon: 'lucideUsers' },
+        { title: 'Menu', key: 'menu', url: '/menu', icon: 'lucideUtensils' },
       ],
     },
   ];
