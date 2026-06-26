@@ -1,92 +1,92 @@
 {
     "overview": {
-        "label": "Menu Management",
-        "title": "Live restaurant menu",
-        "available": "Available",
-        "unavailable": "Unavailable",
-        "promos": "Promos"
+        "label": "إدارة القائمة",
+        "title": "قائمة المطعم المباشرة",
+        "available": "متاحة",
+        "unavailable": "غير متاحة",
+        "promos": "العروض"
     },
     "toolbar": {
-        "label": "Catalog",
-        "title": "Dishes, categories and campaigns"
+        "label": "الكتالوج",
+        "title": "الأطباق والفئات والحملات"
     },
     "buttons": {
-        "refresh": "Refresh",
-        "category": "Category",
-        "promotion": "Promotion",
-        "dish": "Dish",
-        "edit": "Edit",
-        "delete": "Delete",
-        "close": "Close",
-        "save": "Save",
-        "markUnavailable": "Mark off",
-        "markAvailable": "Mark on"
+        "refresh": "تحديث",
+        "category": "فئة",
+        "promotion": "عرض",
+        "dish": "طبق",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "close": "إغلاق",
+        "save": "حفظ",
+        "markUnavailable": "تعطيل",
+        "markAvailable": "تفعيل"
     },
     "filters": {
-        "search": "Search dishes, ingredients, allergens...",
-        "allCategories": "All categories",
-        "allAvailability": "All status",
-        "available": "Available",
-        "unavailable": "Unavailable"
+        "search": "ابحث في الأطباق والمكونات والحساسية...",
+        "allCategories": "كل الفئات",
+        "allAvailability": "كل الحالات",
+        "available": "متاح",
+        "unavailable": "غير متاح"
     },
     "status": {
-        "available": "Available",
-        "unavailable": "Unavailable",
-        "active": "Active",
-        "inactive": "Inactive"
+        "available": "متاح",
+        "unavailable": "غير متاح",
+        "active": "نشط",
+        "inactive": "غير نشط"
     },
     "states": {
-        "loading": "Loading menu...",
-        "empty": "No dishes found",
-        "emptyHint": "Change filters or add the first dish."
+        "loading": "جاري تحميل القائمة...",
+        "empty": "لم يتم العثور على أطباق",
+        "emptyHint": "غيّر الفلاتر أو أضف أول طبق."
     },
     "dish": {
-        "noDescription": "No description yet."
+        "noDescription": "لا يوجد وصف بعد."
     },
     "categories": {
-        "label": "Structure",
-        "title": "Categories"
+        "label": "التنظيم",
+        "title": "الفئات"
     },
     "promotions": {
-        "label": "Campaigns",
-        "title": "Promotions",
-        "empty": "No active promotions yet."
+        "label": "الحملات",
+        "title": "العروض",
+        "empty": "لا توجد عروض نشطة حاليا."
     },
     "editor": {
-        "label": "Editor",
-        "newDish": "New dish",
-        "editDish": "Edit dish",
-        "newCategory": "New category",
-        "newPromotion": "New promotion"
+        "label": "المحرر",
+        "newDish": "طبق جديد",
+        "editDish": "تعديل الطبق",
+        "newCategory": "فئة جديدة",
+        "newPromotion": "عرض جديد"
     },
     "form": {
-        "name": "Name",
-        "category": "Category",
-        "dish": "Dish",
-        "price": "Price",
-        "photoUrl": "Photo URL",
-        "description": "Description",
-        "ingredients": "Ingredients",
-        "allergens": "Allergens",
-        "variants": "Variants",
-        "csvPlaceholder": "Comma separated values",
-        "variantPlaceholder": "Large:4, Extra cheese:2",
-        "available": "Available",
-        "active": "Active",
-        "displayOrder": "Display order",
-        "discount": "Discount %",
-        "startsAt": "Starts",
-        "endsAt": "Ends",
-        "targetType": "Target type",
-        "target": "Target"
+        "name": "الاسم",
+        "category": "الفئة",
+        "dish": "الطبق",
+        "price": "السعر",
+        "photoUrl": "رابط الصورة",
+        "description": "الوصف",
+        "ingredients": "المكونات",
+        "allergens": "مسببات الحساسية",
+        "variants": "الاختيارات",
+        "csvPlaceholder": "قيم مفصولة بفواصل",
+        "variantPlaceholder": "كبير:4، جبن إضافي:2",
+        "available": "متاح",
+        "active": "نشط",
+        "displayOrder": "ترتيب العرض",
+        "discount": "نسبة الخصم",
+        "startsAt": "يبدأ",
+        "endsAt": "ينتهي",
+        "targetType": "نوع الهدف",
+        "target": "الهدف"
     },
     "toast": {
-        "dishCreated": "Dish created",
-        "dishUpdated": "Dish updated",
-        "dishDeleted": "Dish deleted",
-        "categoryCreated": "Category created",
-        "promotionCreated": "Promotion created",
-        "availabilityUpdated": "Availability updated"
+        "dishCreated": "تم إنشاء الطبق",
+        "dishUpdated": "تم تحديث الطبق",
+        "dishDeleted": "تم حذف الطبق",
+        "categoryCreated": "تم إنشاء الفئة",
+        "promotionCreated": "تم إنشاء العرض",
+        "availabilityUpdated": "تم تحديث التوفر"
     },
-    "confirmDelete": "Delete {{name}}?"
+    "confirmDelete": "هل تريد حذف {{name}}؟"
 }
