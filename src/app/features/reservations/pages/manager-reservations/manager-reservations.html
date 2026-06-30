@@ -1,0 +1,173 @@
+<div *transloco="let t; prefix: 'reservations'" class="@container/main flex flex-1 flex-col gap-6">
+  <section class="border-border bg-card flex flex-col gap-4 rounded-lg border p-5 @lg/main:flex-row @lg/main:items-center @lg/main:justify-between">
+    <div>
+      <p class="text-muted-foreground text-sm">{{ t('manager.label') }}</p>
+      <h1 class="mt-1 text-2xl font-semibold tracking-normal">{{ t('manager.title') }}</h1>
+    </div>
+    <div class="flex items-center gap-2">
+      <input hlmInput type="date" [value]="selectedDate()" (change)="setDate($event)" />
+      <button type="button" hlmBtn variant="outline" (click)="refresh()">
+        <ng-icon hlmIcon name="lucideRefreshCcw" size="sm" />
+        {{ t('manager.refresh') }}
+      </button>
+    </div>
+  </section>
+
+  @if (statsResource.value()) {
+    @let stats = statsResource.value()!;
+    <section class="grid grid-cols-2 gap-3 @lg/main:grid-cols-4">
+      <div class="border-border bg-card rounded-lg border p-4">
+        <p class="text-muted-foreground text-xs">{{ t('manager.stats.total') }}</p>
+        <p class="text-xl font-semibold tabular-nums">{{ stats.totalReservations }}</p>
+      </div>
+      <div class="border-border bg-card rounded-lg border p-4">
+        <p class="text-muted-foreground text-xs">{{ t('manager.stats.confirmed') }}</p>
+        <p class="text-xl font-semibold tabular-nums">{{ stats.confirmedCount }}</p>
+      </div>
+      <div class="border-border bg-card rounded-lg border p-4">
+        <p class="text-muted-foreground text-xs">{{ t('manager.stats.noShows') }}</p>
+        <p class="text-xl font-semibold tabular-nums">{{ stats.noShowCount }}</p>
+      </div>
+      <div class="border-border bg-card rounded-lg border p-4">
+        <p class="text-muted-foreground text-xs">{{ t('manager.stats.availableNow') }}</p>
+        <p class="text-xl font-semibold tabular-nums">{{ stats.availableTablesRightNowCount }}/{{ stats.totalTablesCount }}</p>
+      </div>
+    </section>
+  }
+
+  <section class="border-border bg-card overflow-x-auto rounded-lg border">
+    @if (reservationsResource.isLoading()) {
+      <p class="text-muted-foreground p-8 text-center text-sm">{{ t('manager.loading') }}</p>
+    } @else if ((reservationsResource.value() ?? []).length === 0) {
+      <p class="text-muted-foreground p-8 text-center text-sm">{{ t('manager.empty') }}</p>
+    } @else {
+      <table class="w-full text-sm">
+        <thead class="text-muted-foreground border-border border-b text-left">
+          <tr>
+            <th class="p-3">{{ t('manager.columns.code') }}</th>
+            <th class="p-3">{{ t('manager.columns.customer') }}</th>
+            <th class="p-3">{{ t('manager.columns.time') }}</th>
+            <th class="p-3">{{ t('manager.columns.guests') }}</th>
+            <th class="p-3">{{ t('manager.columns.table') }}</th>
+            <th class="p-3">{{ t('manager.columns.status') }}</th>
+            <th class="p-3">{{ t('manager.columns.preorder') }}</th>
+            <th class="p-3 text-right">{{ t('manager.columns.actions') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (reservation of reservationsResource.value(); track reservationTrack($index, reservation)) {
+            <tr class="border-border border-b last:border-0">
+              <td class="p-3 font-medium">{{ reservation.reservationCode }}</td>
+              <td class="p-3">
+                <p>{{ reservation.customer.fullName }}</p>
+                <p class="text-muted-foreground text-xs">{{ reservation.customer.email }}</p>
+              </td>
+              <td class="p-3 whitespace-nowrap">{{ reservation.startTime }}–{{ reservation.endTime }}</td>
+              <td class="p-3">{{ reservation.guestsCount }}</td>
+              <td class="p-3">{{ reservation.table?.tableNumber ?? '—' }}</td>
+              <td class="p-3">
+                <span hlmBadge [variant]="statusVariant(reservation.status)">{{ reservation.status }}</span>
+              </td>
+              <td class="p-3">
+                @if (reservation.preOrderItems.length > 0) {
+                  <span
+                    hlmBadge
+                    [variant]="reservation.preOrderItems.some((i) => !i.stillAvailable) ? 'destructive' : 'outline'"
+                  >
+                    <ng-icon hlmIcon name="lucideUtensils" size="xs" />
+                    {{ reservation.preOrderItems.length }}
+                  </span>
+                } @else {
+                  <span class="text-muted-foreground">—</span>
+                }
+              </td>
+              <td class="p-3">
+                <div class="flex items-center justify-end gap-1">
+                  @if (reservation.status === 'CONFIRMED') {
+                    <button
+                      type="button"
+                      hlmBtn
+                      variant="outline"
+                      size="sm"
+                      [disabled]="busyId() === reservation.id"
+                      (click)="seat(reservation)"
+                    >
+                      {{ t('manager.actions.seat') }}
+                    </button>
+                    <button
+                      type="button"
+                      hlmBtn
+                      variant="outline"
+                      size="sm"
+                      [disabled]="busyId() === reservation.id"
+                      (click)="noShow(reservation)"
+                    >
+                      <ng-icon hlmIcon name="lucideUserX" size="sm" />
+                    </button>
+                    <input
+                      hlmInput
+                      type="number"
+                      class="w-16"
+                      [placeholder]="t('manager.actions.tablePlaceholder')"
+                      (change)="setAssignTableInput(reservation.id, $event)"
+                    />
+                    <button
+                      type="button"
+                      hlmBtn
+                      variant="outline"
+                      size="sm"
+                      [disabled]="busyId() === reservation.id"
+                      (click)="assignTable(reservation)"
+                    >
+                      <ng-icon hlmIcon name="lucideArrowRight" size="sm" />
+                    </button>
+                  }
+                  @if (reservation.status === 'SEATED') {
+                    <button
+                      type="button"
+                      hlmBtn
+                      size="sm"
+                      [disabled]="busyId() === reservation.id"
+                      (click)="complete(reservation)"
+                    >
+                      {{ t('manager.actions.complete') }}
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+  @if (waitlist().length > 0) {
+    <section class="border-border bg-card rounded-lg border p-5">
+      <h2 class="flex items-center gap-2 font-semibold">
+        <ng-icon hlmIcon name="lucideClock" size="sm" />
+        {{ t('manager.waitlist.title') }}
+      </h2>
+      <div class="mt-3 flex flex-col gap-2">
+        @for (entry of waitlist(); track waitlistTrack($index, entry)) {
+          <div class="border-border flex items-center justify-between gap-3 rounded-md border p-3">
+            <div>
+              <p class="font-medium">{{ entry.customer.fullName }}</p>
+              <p class="text-muted-foreground text-xs">
+                {{ entry.requestedDate }} · {{ entry.requestedTime }} · {{ entry.guestsCount }} {{ t('my.guests') }}
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <button type="button" hlmBtn variant="outline" size="sm" (click)="promoteWaitlistEntry(entry)">
+                {{ t('manager.waitlist.promote') }}
+              </button>
+              <button type="button" hlmBtn variant="ghost" size="sm" (click)="cancelWaitlistEntry(entry)">
+                <ng-icon hlmIcon name="lucideX" size="sm" />
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
+</div>

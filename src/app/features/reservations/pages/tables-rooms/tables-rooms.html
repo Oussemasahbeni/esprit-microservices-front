@@ -1,0 +1,136 @@
+<div *transloco="let t; prefix: 'reservations'" class="@container/main flex flex-1 flex-col gap-6">
+  <section class="border-border bg-card flex flex-col gap-4 rounded-lg border p-5 @lg/main:flex-row @lg/main:items-center @lg/main:justify-between">
+    <div>
+      <p class="text-muted-foreground text-sm">{{ t('tables.label') }}</p>
+      <h1 class="mt-1 text-2xl font-semibold tracking-normal">{{ t('tables.title') }}</h1>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button type="button" hlmBtn variant="outline" (click)="toggleRoomForm()">
+        <ng-icon hlmIcon name="lucideDoorOpen" size="sm" />
+        {{ t('tables.addRoom') }}
+      </button>
+      <button type="button" hlmBtn (click)="toggleTableForm()">
+        <ng-icon hlmIcon name="lucidePlus" size="sm" />
+        {{ t('tables.addTable') }}
+      </button>
+    </div>
+  </section>
+
+  @if (showRoomForm()) {
+    <form class="border-border bg-card flex flex-col gap-4 rounded-lg border p-5" (ngSubmit)="saveRoom()">
+      <div class="grid gap-4 @md/main:grid-cols-3">
+        <hlm-field>
+          <hlm-field-label>{{ t('tables.form.roomName') }}</hlm-field-label>
+          <input hlmInput class="w-full" [formControl]="roomForm.controls.name" />
+        </hlm-field>
+        <hlm-field>
+          <hlm-field-label>{{ t('tables.form.description') }}</hlm-field-label>
+          <input hlmInput class="w-full" [formControl]="roomForm.controls.description" />
+        </hlm-field>
+        <hlm-field>
+          <hlm-field-label>{{ t('tables.form.floor') }}</hlm-field-label>
+          <input hlmInput type="number" class="w-full" [formControl]="roomForm.controls.floorNumber" />
+        </hlm-field>
+      </div>
+      <button type="submit" hlmBtn class="self-end">{{ t('tables.form.save') }}</button>
+    </form>
+  }
+
+  @if (showTableForm()) {
+    <form class="border-border bg-card flex flex-col gap-4 rounded-lg border p-5" (ngSubmit)="saveTable()">
+      <div class="grid gap-4 @md/main:grid-cols-4">
+        <hlm-field>
+          <hlm-field-label>{{ t('tables.form.room') }}</hlm-field-label>
+          <select
+            class="border-input bg-background ring-offset-background focus-visible:ring-ring h-9 rounded-md border px-3 text-sm outline-none focus-visible:ring-2"
+            [formControl]="tableForm.controls.roomId"
+          >
+            <option [ngValue]="null">{{ t('tables.form.selectRoom') }}</option>
+            @for (room of rooms(); track roomTrack($index, room)) {
+              <option [ngValue]="room.id">{{ room.name }}</option>
+            }
+          </select>
+        </hlm-field>
+        <hlm-field>
+          <hlm-field-label>{{ t('tables.form.tableNumber') }}</hlm-field-label>
+          <input hlmInput class="w-full" [formControl]="tableForm.controls.tableNumber" />
+        </hlm-field>
+        <hlm-field>
+          <hlm-field-label>{{ t('tables.form.capacity') }}</hlm-field-label>
+          <input hlmInput type="number" min="1" class="w-full" [formControl]="tableForm.controls.capacity" />
+        </hlm-field>
+        <hlm-field>
+          <hlm-field-label>{{ t('tables.form.shape') }}</hlm-field-label>
+          <select
+            class="border-input bg-background ring-offset-background focus-visible:ring-ring h-9 rounded-md border px-3 text-sm outline-none focus-visible:ring-2"
+            [formControl]="tableForm.controls.shape"
+          >
+            <option value="ROUND">{{ t('tables.shapes.round') }}</option>
+            <option value="SQUARE">{{ t('tables.shapes.square') }}</option>
+            <option value="RECTANGLE">{{ t('tables.shapes.rectangle') }}</option>
+          </select>
+        </hlm-field>
+      </div>
+      <button type="submit" hlmBtn class="self-end">{{ t('tables.form.save') }}</button>
+    </form>
+  }
+
+  <section class="grid gap-5 @4xl/main:grid-cols-[280px_minmax(0,1fr)]">
+    <div class="border-border bg-card flex flex-col gap-2 rounded-lg border p-4">
+      <h2 class="flex items-center gap-2 font-semibold">
+        <ng-icon hlmIcon name="lucideDoorOpen" size="sm" />
+        {{ t('tables.rooms') }}
+      </h2>
+      <button
+        type="button"
+        class="rounded-md px-3 py-2 text-left text-sm"
+        [class.bg-accent]="selectedRoomId() === null"
+        (click)="selectRoom(null)"
+      >
+        {{ t('tables.allRooms') }}
+      </button>
+      @for (room of rooms(); track roomTrack($index, room)) {
+        <button
+          type="button"
+          class="rounded-md px-3 py-2 text-left text-sm"
+          [class.bg-accent]="selectedRoomId() === room.id"
+          (click)="selectRoom(room.id)"
+        >
+          {{ room.name }}
+          @if (room.floorNumber !== null) {
+            <span class="text-muted-foreground text-xs"> · {{ t('tables.floor') }} {{ room.floorNumber }}</span>
+          }
+        </button>
+      }
+    </div>
+
+    <div class="grid gap-4 @lg/main:grid-cols-2 @3xl/main:grid-cols-3">
+      @for (table of tablesInSelectedRoom(); track tableTrack($index, table)) {
+        <article class="border-border bg-card flex flex-col gap-3 rounded-lg border p-4">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="flex items-center gap-2 font-semibold">
+              <ng-icon hlmIcon name="lucideTable2" size="sm" />
+              {{ table.tableNumber }}
+            </h3>
+            <span hlmBadge [variant]="statusVariant(table.status)">{{ table.status }}</span>
+          </div>
+          <p class="text-muted-foreground text-sm">{{ table.capacity }} {{ t('my.guests') }} · {{ table.shape }}</p>
+          <div class="flex flex-wrap gap-2">
+            @for (status of statusOptions; track status) {
+              <button
+                type="button"
+                hlmBtn
+                variant="outline"
+                size="sm"
+                [disabled]="table.status === status"
+                (click)="setTableStatus(table, status)"
+              >
+                {{ status }}
+              </button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+</div>

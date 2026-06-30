@@ -1,0 +1,125 @@
+{
+  "book": {
+    "label": "Reservations",
+    "title": "Book a table"
+  },
+  "lookup": {
+    "label": "Reservations",
+    "title": "Look up a reservation",
+    "hint": "Enter the confirmation code from your booking email to view its status.",
+    "codeLabel": "Confirmation code",
+    "search": "Search",
+    "searching": "Searching...",
+    "notFound": "No reservation found for that code."
+  },
+  "form": {
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "guests": "Guests",
+    "date": "Date",
+    "time": "Time",
+    "specialRequests": "Special requests",
+    "submit": "Confirm reservation",
+    "submitting": "Booking..."
+  },
+  "preorder": {
+    "title": "Pre-order dishes",
+    "hint": "Optional — pick dishes from today's available menu to have ready when you arrive.",
+    "loading": "Loading menu...",
+    "empty": "No dishes available right now."
+  },
+  "result": {
+    "confirmedTitle": "Reservation confirmed",
+    "waitlistedTitle": "Added to waitlist",
+    "staffWarning": "Staff levels are tight for this time slot — the manager has been notified.",
+    "code": "Confirmation code",
+    "table": "Table"
+  },
+  "info": {
+    "title": "Good to know",
+    "body": "Tables are held for 15 minutes past the booking time. You can cancel anytime from My Reservations."
+  },
+  "my": {
+    "label": "Reservations",
+    "title": "My reservations",
+    "loading": "Loading your reservations...",
+    "empty": "No reservations yet",
+    "emptyHint": "Book a table to see it here.",
+    "guests": "guests",
+    "table": "Table",
+    "preorder": "Pre-ordered",
+    "unavailable": "No longer available",
+    "cancel": "Cancel reservation",
+    "confirmCancel": "Cancel reservation {{code}}?"
+  },
+  "manager": {
+    "label": "Reservations",
+    "title": "Manager dashboard",
+    "refresh": "Refresh",
+    "loading": "Loading reservations...",
+    "empty": "No reservations for this date",
+    "columns": {
+      "code": "Code",
+      "customer": "Customer",
+      "time": "Time",
+      "guests": "Guests",
+      "table": "Table",
+      "status": "Status",
+      "preorder": "Pre-order",
+      "actions": "Actions"
+    },
+    "actions": {
+      "seat": "Seat",
+      "complete": "Complete",
+      "tablePlaceholder": "Table #"
+    },
+    "waitlist": {
+      "title": "Waitlist",
+      "promote": "Promote"
+    },
+    "stats": {
+      "total": "Total reservations",
+      "confirmed": "Confirmed",
+      "noShows": "No-shows",
+      "availableNow": "Available now"
+    }
+  },
+  "tables": {
+    "label": "Reservations",
+    "title": "Tables & rooms",
+    "addRoom": "Add room",
+    "addTable": "Add table",
+    "rooms": "Rooms",
+    "allRooms": "All rooms",
+    "floor": "Floor",
+    "form": {
+      "roomName": "Room name",
+      "description": "Description",
+      "floor": "Floor number",
+      "room": "Room",
+      "selectRoom": "Select a room",
+      "tableNumber": "Table number",
+      "capacity": "Capacity",
+      "shape": "Shape",
+      "save": "Save"
+    },
+    "shapes": {
+      "round": "Round",
+      "square": "Square",
+      "rectangle": "Rectangle"
+    },
+    "toast": {
+      "roomCreated": "Room created",
+      "tableCreated": "Table created",
+      "statusUpdated": "Table status updated"
+    }
+  },
+  "toast": {
+    "confirmed": "Reservation confirmed",
+    "waitlisted": "Added to the waitlist",
+    "cancelled": "Reservation cancelled",
+    "waitlistPromoted": "Waitlist entry promoted",
+    "waitlistCancelled": "Waitlist entry cancelled"
+  }
+}

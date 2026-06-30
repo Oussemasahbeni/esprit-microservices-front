@@ -49,6 +49,12 @@ export const routes: Routes = [
         data: { breadcrumb: 'navigation.menu', preload: true },
         loadChildren: () => import('./features/menu/routes'),
       },
+      {
+        path: 'reservations',
+        title: 'reservations',
+        data: { breadcrumb: 'navigation.reservations', preload: true },
+        loadChildren: () => import('./features/reservations/routes'),
+      },
     ],
   },
 
